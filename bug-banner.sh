@@ -9,6 +9,7 @@
 #   shell         Interactive mode; type 'exit' or 'quit' to leave
 #   help          Show this help
 #   version       Show version
+#   exit, quit    Exit without output (also leaves shell mode)
 #
 # Options:
 #   -c, --color NAME   Color: green, cyan, yellow, red, none (default green)
@@ -73,6 +74,7 @@ run_command() {
         info)    print_info ;;
         version) echo "bug-banner $VERSION" ;;
         help)    usage ;;
+        exit|quit) return 0 ;;
         *)
             echo "bug-banner: unknown command '$1'. Try 'help'." >&2
             return 1

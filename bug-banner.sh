@@ -6,6 +6,7 @@
 # Commands:
 #   show          Print the banner (default)
 #   info          Print system information only
+#   hunt          Print the bug hunt banner
 #   shell         Interactive mode; "shell" inside opens a nested shell, back/bugs/exit leaves one level
 #   help          Show this help
 #   version       Show version
@@ -59,6 +60,25 @@ BUG
     printf '\n%s\n' "Every bug is a lesson. Read the code, fix the cause."
 }
 
+print_hunt_banner() {
+    printf '%b' "$COLOR"
+    cat <<'HUNT'
+          .-----.
+         /  .-.  \        BUG HUNT
+        |  ( x )  |  <--  scanning for the bug...
+         \  '-'  /
+          '-----'
+             \
+      ,---.   \
+     ( o o )   >  found one
+      \ ~ /
+     /|   |\
+    (_|   |_)
+HUNT
+    printf '%b' "$RESET"
+    printf '\n%s\n' "Read every line. Reproduce it. Then fix it."
+}
+
 print_info() {
     [ "$SHOW_INFO" -eq 1 ] || return 0
     printf '%b' "$COLOR"
@@ -72,6 +92,7 @@ run_command() {
     case "$1" in
         show)    print_banner; echo; print_info ;;
         info)    print_info ;;
+        hunt)    print_hunt_banner; echo; print_info ;;
         version) echo "bug-banner $VERSION" ;;
         help)    usage ;;
         exit|quit) return 0 ;;

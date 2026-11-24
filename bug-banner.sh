@@ -6,7 +6,7 @@
 # Commands:
 #   show          Print the banner (default)
 #   info          Print system information only
-#   shell         Interactive mode; type 'exit' or 'quit' to leave
+#   shell         Interactive mode; type bugs, exit or quit to leave
 #   help          Show this help
 #   version       Show version
 #   exit, quit    Exit without output (also leaves shell mode)
@@ -84,25 +84,18 @@ run_command() {
 
 interactive_shell() {
     echo "bug-banner shell. Commands: show, info, version, help, exit."
-    echo "Press q or type exit to leave."
+    echo "Type bugs or exit to leave."
     while true; do
-        printf 'bug [q=exit]> '
-        # Read one key first so that 'q' leaves without Enter.
-        if ! IFS= read -rn1 first; then
+        printf 'bug [bugs=exit]> '
+        if ! read -r line; then
             echo
             break
         fi
-        if [ "$first" = "q" ]; then
-            echo
-            break
-        fi
-        IFS= read -r rest || rest=""
-        line="$first$rest"
         # shellcheck disable=SC2086
         set -- $line
         case "${1:-}" in
             "") continue ;;
-            exit|quit) break ;;
+            bugs|exit|quit) break ;;
             shell) echo "Already in shell mode." ;;
             *) run_command "$1" ;;
         esac

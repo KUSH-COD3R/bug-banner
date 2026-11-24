@@ -15,6 +15,7 @@ bug-banner [OPTIONS] [COMMAND]
 | `show`    | Print the banner (default)                       |
 | `info`    | Print system information only                    |
 | `hunt`    | Print the bug hunt banner                        |
+| `panel`   | Banner on the left, system info on the right     |
 | `shell`   | Interactive mode (see below)                     |
 | `help`    | Show help                                        |
 | `version` | Show version                                     |

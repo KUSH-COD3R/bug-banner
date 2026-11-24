@@ -7,6 +7,7 @@
 #   show          Print the banner (default)
 #   info          Print system information only
 #   hunt          Print the bug hunt banner
+#   panel         Print the banner side by side with system info
 #   shell         Interactive mode; "shell" inside opens a nested shell, back/bugs/exit leaves one level
 #   help          Show this help
 #   version       Show version
@@ -79,6 +80,36 @@ HUNT
     printf '\n%s\n' "Read every line. Reproduce it. Then fix it."
 }
 
+print_panel() {
+    local -a art info
+    local i left right
+    mapfile -t art <<'ART'
+          \  /
+       .-"""-.
+      /  o o  \
+     |  \___/  |
+      \  ___  /
+ /\    `-----'    /\
+/  \  /|  |  |\  /  \
+/    \/ |__|__| \/    \
+~~~~~~~ /_/   \_\ ~~~~~~~
+ART
+    info=(
+        "BUG HUNTER"
+        ""
+        "SYSTEM : $(uname -s 2>/dev/null || echo unknown)"
+        "SHELL  : ${SHELL:-unknown}"
+        "COLOR  : $COLOR_NAME"
+        ""
+        "Every bug is a lesson."
+    )
+    for i in "${!art[@]}"; do
+        left="${art[$i]}"
+        right="${info[$i]:-}"
+        printf '%b%-40s%s%b\n' "$COLOR" "$left" "$right" "$RESET"
+    done
+}
+
 print_info() {
     [ "$SHOW_INFO" -eq 1 ] || return 0
     printf '%b' "$COLOR"
@@ -93,6 +124,7 @@ run_command() {
         show)    print_banner; echo; print_info ;;
         info)    print_info ;;
         hunt)    print_hunt_banner; echo; print_info ;;
+        panel)   print_panel ;;
         version) echo "bug-banner $VERSION" ;;
         help)    usage ;;
         exit|quit) return 0 ;;

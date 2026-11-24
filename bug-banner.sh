@@ -6,7 +6,7 @@
 # Commands:
 #   show          Print the banner (default)
 #   info          Print system information only
-#   shell         Interactive mode; type bugs, exit or quit to leave
+#   shell         Interactive mode; type bugs, back, exit or quit to leave
 #   help          Show this help
 #   version       Show version
 #   exit, quit    Exit without output (also leaves shell mode)
@@ -84,9 +84,9 @@ run_command() {
 
 interactive_shell() {
     echo "bug-banner shell. Commands: show, info, version, help, exit."
-    echo "Type bugs or exit to leave."
+    echo "Type bugs, back or exit to leave."
     while true; do
-        printf 'bug [bugs=exit]> '
+        printf 'bug [bugs/back=exit]> '
         if ! read -r line; then
             echo
             break
@@ -95,7 +95,7 @@ interactive_shell() {
         set -- $line
         case "${1:-}" in
             "") continue ;;
-            bugs|exit|quit) break ;;
+            bugs|back|exit|quit) break ;;
             shell) echo "Already in shell mode." ;;
             *) run_command "$1" ;;
         esac

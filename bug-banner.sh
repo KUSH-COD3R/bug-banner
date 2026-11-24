@@ -83,24 +83,31 @@ run_command() {
 }
 
 SHELL_DEPTH=0
+EXIT_ALL=0
 
-# Each 'shell' opens a nested shell. back/bugs/exit leave one level.
+# Each 'shell' opens a nested shell. back/bugs leave one level.
+# exit/quit leave every nested level and return to Termux.
 interactive_shell() {
     SHELL_DEPTH=$((SHELL_DEPTH + 1))
     echo "bug-banner shell (level $SHELL_DEPTH). Commands: show, info, version, help, shell, exit."
-    echo "Type shell for a new nested shell. Type back, bugs or exit to leave this level."
+    echo "shell opens a nested level. back/bugs leave one level. exit leaves all levels."
     while true; do
-        printf 'bug[%s] [back=exit]> ' "$SHELL_DEPTH"
+        printf 'bug[%s] [back=up exit=all]> ' "$SHELL_DEPTH"
         if ! read -r line; then
             echo
+            EXIT_ALL=1
             break
         fi
         # shellcheck disable=SC2086
         set -- $line
         case "${1:-}" in
             "") continue ;;
-            bugs|back|exit|quit) break ;;
-            shell) interactive_shell ;;
+            bugs|back) break ;;
+            exit|quit) EXIT_ALL=1; break ;;
+            shell)
+                interactive_shell
+                [ "$EXIT_ALL" -eq 1 ] && break
+                ;;
             *) run_command "$1" ;;
         esac
     done

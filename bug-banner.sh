@@ -89,6 +89,10 @@ EXIT_ALL=0
 # exit/quit leave every nested level and return to Termux.
 interactive_shell() {
     SHELL_DEPTH=$((SHELL_DEPTH + 1))
+    if [ "$SHELL_DEPTH" -eq 1 ]; then
+        print_banner
+        echo
+    fi
     echo "bug-banner shell (level $SHELL_DEPTH). Commands: show, info, version, help, shell, exit."
     echo "shell opens a nested level. back/bugs leave one level. exit leaves all levels."
     while true; do

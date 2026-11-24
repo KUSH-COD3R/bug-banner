@@ -138,7 +138,16 @@ done
 
 [ -n "${COLOR+x}" ] || set_color green
 
+# Goodbye message runs on any exit, but only when the shell was used.
+IN_SHELL=0
+cleanup() {
+    [ "$IN_SHELL" -eq 1 ] && echo "Leaving bug-banner. Bye."
+    return 0
+}
+trap cleanup EXIT
+
 if [ "$COMMAND" = "shell" ]; then
+    IN_SHELL=1
     interactive_shell
     exit 0
 fi

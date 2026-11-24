@@ -83,13 +83,20 @@ run_command() {
 }
 
 interactive_shell() {
-    echo "bug-banner shell. Commands: show, info, version, help, exit"
+    echo "bug-banner shell. Commands: show, info, version, help, exit. Press q to quit at once."
     while true; do
         printf 'bug> '
-        if ! read -r line; then
+        # Read one key first so that 'q' leaves without Enter.
+        if ! IFS= read -rn1 first; then
             echo
             break
         fi
+        if [ "$first" = "q" ]; then
+            echo
+            break
+        fi
+        IFS= read -r rest || rest=""
+        line="$first$rest"
         # shellcheck disable=SC2086
         set -- $line
         case "${1:-}" in

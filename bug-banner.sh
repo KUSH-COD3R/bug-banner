@@ -6,7 +6,7 @@
 # Commands:
 #   show          Print the banner (default)
 #   info          Print system information only
-#   shell         Interactive mode; type bugs, back, exit or quit to leave
+#   shell         Interactive mode; "shell" inside opens a nested shell, back/bugs/exit leaves one level
 #   help          Show this help
 #   version       Show version
 #   exit, quit    Exit without output (also leaves shell mode)
@@ -82,11 +82,15 @@ run_command() {
     esac
 }
 
+SHELL_DEPTH=0
+
+# Each 'shell' opens a nested shell. back/bugs/exit leave one level.
 interactive_shell() {
-    echo "bug-banner shell. Commands: show, info, version, help, exit."
-    echo "Type bugs, back or exit to leave."
+    SHELL_DEPTH=$((SHELL_DEPTH + 1))
+    echo "bug-banner shell (level $SHELL_DEPTH). Commands: show, info, version, help, shell, exit."
+    echo "Type shell for a new nested shell. Type back, bugs or exit to leave this level."
     while true; do
-        printf 'bug [bugs/back=exit]> '
+        printf 'bug[%s] [back=exit]> ' "$SHELL_DEPTH"
         if ! read -r line; then
             echo
             break
@@ -96,10 +100,11 @@ interactive_shell() {
         case "${1:-}" in
             "") continue ;;
             bugs|back|exit|quit) break ;;
-            shell) echo "Already in shell mode." ;;
+            shell) interactive_shell ;;
             *) run_command "$1" ;;
         esac
     done
+    SHELL_DEPTH=$((SHELL_DEPTH - 1))
 }
 
 # Parse options first, then the command.

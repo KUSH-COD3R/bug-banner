@@ -83,9 +83,10 @@ run_command() {
 }
 
 interactive_shell() {
-    echo "bug-banner shell. Commands: show, info, version, help, exit. Press q to quit at once."
+    echo "bug-banner shell. Commands: show, info, version, help, exit."
+    echo "Press q or type exit to leave."
     while true; do
-        printf 'bug> '
+        printf 'bug [q=exit]> '
         # Read one key first so that 'q' leaves without Enter.
         if ! IFS= read -rn1 first; then
             echo
